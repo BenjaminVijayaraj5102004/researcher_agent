@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Researcher AI — Multi-Agent Paper Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Background Effects -->
+<div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+</div>
+<div class="grain-overlay"></div>
+
+<!-- Header -->
+<header class="header">
+    <div class="header-inner">
+        <div class="logo">
+            <span class="logo-icon">⬡</span>
+            <span class="logo-text">Researcher<span class="logo-accent">AI</span></span>
+        </div>
+        <nav class="header-nav">
+            <button class="nav-btn" onclick="showSection('generate')">Generate</button>
+            <button class="nav-btn" onclick="showSection('history')">History</button>
+            <button class="nav-btn" onclick="showSection('about')">About</button>
+        </nav>
+        <div class="status-indicator" id="statusBadge">
+            <span class="status-dot"></span>
+            <span class="status-text">System Ready</span>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main">
+
+    <!-- ── Section: Generate ─────────────────────────────────────────────── -->
+    <section id="section-generate" class="section active">
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-badge">Multi-Agent AI Research System</div>
+            <h1 class="hero-title">
+                Transform <em>any topic</em><br>
+                into a IEEE paper
+            </h1>
+            <p class="hero-subtitle">
+                Four specialized AI agents work in concert — searching the web, 
+                structuring knowledge, writing academically, and reviewing for quality.
+            </p>
+        </div>
+
+        <!-- Agent Pipeline Visualization -->
+        <div class="pipeline-visual">
+            <div class="pipeline-step" id="step-main">
+                <div class="step-icon">🧠</div>
+                <div class="step-label">Main Agent</div>
+                <div class="step-role">Orchestrator</div>
+                <div class="step-connector"></div>
+            </div>
+            <div class="pipeline-step" id="step-fetch">
+                <div class="step-icon">🔍</div>
+                <div class="step-label">Sub-Agent 1</div>
+                <div class="step-role">Web Fetcher</div>
+                <div class="step-connector"></div>
+            </div>
+            <div class="pipeline-step" id="step-writer">
+                <div class="step-icon">✍️</div>
+                <div class="step-label">Sub-Agent 2</div>
+                <div class="step-role">IEEE Writer</div>
+                <div class="step-connector"></div>
+            </div>
+            <div class="pipeline-step" id="step-review">
+                <div class="step-icon">🔬</div>
+                <div class="step-label">Sub-Agent 3</div>
+                <div class="step-role">Reviewer</div>
+            </div>
+        </div>
+
+        <!-- Research Form -->
+        <div class="form-card">
+            <div class="form-card-header">
+                <h2>Start New Research</h2>
+                <p>Enter your topic and configure the research pipeline</p>
+            </div>
+            
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="form-label" for="topicInput">Research Topic</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="topicInput" 
+                            class="form-input" 
+                            placeholder="e.g., Quantum Computing in Machine Learning"
+                            maxlength="500"
+                        >
+                        <span class="input-glow"></span>
+                    </div>
+                    <p class="form-hint">Be specific for better results. Min 3 characters.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="contextInput">Additional Context <span class="optional-badge">optional</span></label>
+                    <textarea 
+                        id="contextInput" 
+                        class="form-textarea" 
+                        placeholder="Any specific angles, focus areas, or requirements..."
+                        rows="3"
+                    ></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="form-label" for="sourcesInput">Max Sources</label>
+                        <div class="number-input-wrapper">
+                            <button class="num-btn" onclick="adjustSources(-1)">−</button>
+                            <input type="number" id="sourcesInput" class="form-input-num" value="5" min="1" max="10">
+                            <button class="num-btn" onclick="adjustSources(1)">+</button>
+                        </div>
+                        <p class="form-hint">1–10 web sources</p>
+                    </div>
+                    <div class="form-group half">
+                        <label class="form-label">Mode</label>
+                        <div class="mode-selector">
+                            <button class="mode-btn active" data-mode="stream" onclick="setMode('stream')">
+                                <span class="mode-icon">⚡</span> Live Stream
+                            </button>
+                            <button class="mode-btn" data-mode="sync" onclick="setMode('sync')">
+                                <span class="mode-icon">🔄</span> Sync
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="submit-btn" id="submitBtn" onclick="startResearch()">
+                    <span class="btn-icon">🚀</span>
+                    <span class="btn-text">Generate Research Paper</span>
+                    <span class="btn-shimmer"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Panel -->
+        <div class="progress-panel hidden" id="progressPanel">
+            <div class="progress-header">
+                <h3 class="progress-title">
+                    <span class="pulse-dot"></span>
+                    Research in Progress
+                </h3>
+                <div class="progress-meta" id="progressMeta">Initializing...</div>
+            </div>
+            
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width: 0%"></div>
+                <div class="progress-pct" id="progressPct">0%</div>
+            </div>
+            
+            <div class="agent-status-grid">
+                <div class="agent-card" id="agentCard-main">
+                    <div class="agent-card-icon">🧠</div>
+                    <div class="agent-card-info">
+                        <span class="agent-card-name">Main Agent</span>
+                        <span class="agent-card-status">Waiting</span>
+                    </div>
+                    <div class="agent-card-dot"></div>
+                </div>
+                <div class="agent-card" id="agentCard-fetch">
+                    <div class="agent-card-icon">🔍</div>
+                    <div class="agent-card-info">
+                        <span class="agent-card-name">Fetch Agent</span>
+                        <span class="agent-card-status">Waiting</span>
+                    </div>
+                    <div class="agent-card-dot"></div>
+                </div>
+                <div class="agent-card" id="agentCard-writer">
+                    <div class="agent-card-icon">✍️</div>
+                    <div class="agent-card-info">
+                        <span class="agent-card-name">Writer Agent</span>
+                        <span class="agent-card-status">Waiting</span>
+                    </div>
+                    <div class="agent-card-dot"></div>
+                </div>
+                <div class="agent-card" id="agentCard-review">
+                    <div class="agent-card-icon">🔬</div>
+                    <div class="agent-card-info">
+                        <span class="agent-card-name">Review Agent</span>
+                        <span class="agent-card-status">Waiting</span>
+                    </div>
+                    <div class="agent-card-dot"></div>
+                </div>
+            </div>
+            
+            <!-- Log terminal -->
+            <div class="log-terminal">
+                <div class="log-header">
+                    <span class="log-title">⚡ Live Agent Logs</span>
+                    <button class="log-clear" onclick="clearLogs()">Clear</button>
+                </div>
+                <div class="log-body" id="logBody"></div>
+            </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-panel hidden" id="resultPanel">
+            <div class="result-header">
+                <div class="result-badge success">✅ Paper Generated</div>
+                <div class="result-actions">
+                    <button class="action-btn" onclick="copyPaper()">
+                        <span>📋</span> Copy
+                    </button>
+                    <button class="action-btn" onclick="downloadPaper()">
+                        <span>⬇️</span> Download .txt
+                    </button>
+                    <button class="action-btn primary" onclick="newResearch()">
+                        <span>🔄</span> New Research
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Metrics Row -->
+            <div class="metrics-row" id="metricsRow"></div>
+            
+            <!-- Tab System -->
+            <div class="result-tabs">
+                <button class="tab-btn active" onclick="showTab('paper')" id="tab-paper">📄 Paper</button>
+                <button class="tab-btn" onclick="showTab('sources')" id="tab-sources">🔗 Sources</button>
+                <button class="tab-btn" onclick="showTab('review')" id="tab-review">🔬 Review</button>
+            </div>
+            
+            <div class="tab-content active" id="tabContent-paper">
+                <div class="paper-display" id="paperDisplay"></div>
+            </div>
+            <div class="tab-content" id="tabContent-sources">
+                <div class="sources-list" id="sourcesList"></div>
+            </div>
+            <div class="tab-content" id="tabContent-review">
+                <div class="review-display" id="reviewDisplay"></div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ── Section: History ──────────────────────────────────────────────── -->
+    <section id="section-history" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Research History</h2>
+            <button class="refresh-btn" onclick="loadHistory()">↻ Refresh</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="empty-state">
+                <div class="empty-icon">📚</div>
+                <p>No research history yet. Generate your first paper!</p>
+                <button class="action-btn primary" onclick="showSection('generate')">Start Research</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Section: About ────────────────────────────────────────────────── -->
+    <section id="section-about" class="section">
+        <div class="about-grid">
+            <div class="about-hero">
+                <h2>How It Works</h2>
+                <p>A sophisticated multi-agent pipeline that transforms any topic into a publication-ready IEEE research paper.</p>
+            </div>
+            <div class="agent-cards-about">
+                <div class="about-agent-card">
+                    <div class="aac-icon">🧠</div>
+                    <h3>Main Agent</h3>
+                    <p>The orchestrator. Receives your topic, coordinates all sub-agents, manages workflow state, and delivers the final result.</p>
+                    <div class="tech-tags"><span>FastAPI</span><span>Python</span><span>Groq</span></div>
+                </div>
+                <div class="about-agent-card">
+                    <div class="aac-icon">🔍</div>
+                    <h3>Sub-Agent 1 — Fetch</h3>
+                    <p>Searches the web via Serper API, fetches page content, and uses LLM to extract and structure key facts.</p>
+                    <div class="tech-tags"><span>Serper API</span><span>BeautifulSoup</span><span>Pydantic</span></div>
+                </div>
+                <div class="about-agent-card">
+                    <div class="aac-icon">✍️</div>
+                    <h3>Sub-Agent 2 — Writer</h3>
+                    <p>Takes structured facts and writes a complete IEEE-format paper with proper sections, citations, and academic language.</p>
+                    <div class="tech-tags"><span>Groq LLM</span><span>IEEE Format</span><span>Pydantic</span></div>
+                </div>
+                <div class="about-agent-card">
+                    <div class="aac-icon">🔬</div>
+                    <h3>Sub-Agent 3 — Review</h3>
+                    <p>Checks alignment, detects plagiarism patterns, validates IEEE compliance, and rewrites the paper for maximum quality.</p>
+                    <div class="tech-tags"><span>NLP Analysis</span><span>Groq LLM</span><span>Quality Scoring</span></div>
+                </div>
+            </div>
+            <div class="tech-stack-section">
+                <h3>Technology Stack</h3>
+                <div class="tech-grid">
+                    <div class="tech-item"><span class="tech-badge be">Backend</span>Python · FastAPI · Pydantic · Groq · Supabase</div>
+                    <div class="tech-item"><span class="tech-badge fe">Frontend</span>Vanilla JS · CSS3 · Server-Sent Events</div>
+                    <div class="tech-item"><span class="tech-badge ai">AI</span>Groq (llama-3.3-70b) · Serper Web Search</div>
+                    <div class="tech-item"><span class="tech-badge db">Database</span>Supabase PostgreSQL · Real-time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Toast Notifications -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
